@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: nimbusserver
+    runs-on: NIMBUSSERVER
     name: Execute LRE test
     env:
       lre_username: ${{ secrets.LRE_USERNAME }}
