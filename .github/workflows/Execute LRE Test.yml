@@ -2,14 +2,14 @@ name: Test My GitHub Action
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'tests/**'
     tags-ignore:
       - 'v*.*.*'
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - 'tests/**'
 jobs:
