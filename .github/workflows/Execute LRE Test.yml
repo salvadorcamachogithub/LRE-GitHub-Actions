@@ -1,46 +1,49 @@
-name: LRE test
-
+name: Test My GitHub Action
 on:
   push:
     branches:
-      - master
-
+      - main
+    paths:
+      - 'tests/**'
+    tags-ignore:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'tests/**'
 jobs:
-  test:
-    runs-on: NIMBUSCLIENTCLEAN
-    name: Execute LRE test
+  build:
+    runs-on: ubuntu-latest
+    name: Start a LRE load test
     env:
-      lre_username: ${{ secrets.LRE_USERNAME_TOKEN }}
-      lre_password: ${{ secrets.LRE_PASSWORD_TOKEN }}
+      lre_username: ${{ secrets.LRE_USERNAME }}
+      lre_password: ${{ secrets.LRE_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: adopt
           java-version: '11'
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Use My LRE GitHub Action
+      - name: List _actions directory contents
+        run: 'ls -R /home/runner/work/_actions'
+      - name: Run My GitHub Action
         uses: MicroFocus/lre-gh-action@v1.0.2
         with:
           lre_action: ExecuteLreTest
-          lre_description: Run test already in LRE
-          lre_server: nimbuswindows.aos.com
-          lre_https_protocol: false
+          lre_description: running new yaml test
+          lre_server: ${{ secrets.LRE_SERVER }}
+          lre_https_protocol: true
           lre_authenticate_with_token: true
-          lre_domain: Salvador
-          lre_project: AOS
-          lre_test: 197
+          lre_domain: DANIEL
+          lre_project: proj1
+          lre_test: YamlTest/createTestFromYaml.yaml
           lre_test_instance: AUTO
           lre_timeslot_duration_hours: 0
           lre_timeslot_duration_minutes: 30
@@ -49,9 +52,11 @@ jobs:
           lre_trend_report: ASSOCIATED
           lre_status_by_sla: false
           lre_output_dir: ${{ github.workspace }}
-
+          lre_enable_stacktrace: true
+      - name: List workspace directory contents
+        run: 'ls -R ${{ github.workspace }}/LreResult'
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ${{ github.workspace }}/LreResult
+          path: '${{ github.workspace }}/LreResult'
