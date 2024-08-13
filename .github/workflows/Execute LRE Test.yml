@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Execute LRE test
     env:
       lre_username: ${{ secrets.LRE_USERNAME_TOKEN }}
@@ -34,8 +34,8 @@ jobs:
         uses: MicroFocus/lre-gh-action@v1.0.2
         with:
           lre_action: ExecuteLreTest
-          lre_description: running new yaml test
-          lre_server: nimbuswindows.aos.com/
+          lre_description: Run test already in LRE
+          lre_server: nimbuswindows.aos.com
           lre_https_protocol: false
           lre_authenticate_with_token: true
           lre_domain: Salvador
