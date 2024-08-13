@@ -3,7 +3,7 @@ name: LRE test
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   test:
