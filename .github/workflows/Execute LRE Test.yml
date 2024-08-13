@@ -10,8 +10,8 @@ jobs:
     runs-on: nimbusserver
     name: Execute LRE test
     env:
-      lre_username: ${{ secrets.LRE_USERNAME_TOKEN }}
-      lre_password: ${{ secrets.LRE_PASSWORD_TOKEN }}
+      lre_username: ${{ secrets.LRE_USERNAME }}
+      lre_password: ${{ secrets.LRE_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,9 +32,9 @@ jobs:
         with:
           lre_action: ExecuteLreTest
           lre_description: Run test already in LRE
-          lre_server: nimbuswindows.aos.com:80/?
-          
-          lre_authenticate_with_token: true
+          lre_server: nimbuswindows.aos.com
+          lre_https_protocol: false
+          lre_authenticate_with_token: false
           lre_domain: Salvador
           lre_project: AOS
           lre_test: 197
