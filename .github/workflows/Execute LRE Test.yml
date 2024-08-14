@@ -1,5 +1,5 @@
 name: LRE test
-# LoadRunner Enterprise Workflow
+# LoadRunner Enterprise Workflow Trigger v1
 # Start Test on a push to master
 on:
   push:
