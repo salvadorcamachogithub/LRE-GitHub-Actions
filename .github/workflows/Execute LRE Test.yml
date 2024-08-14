@@ -24,8 +24,6 @@ jobs:
           java-version: '11'
 
       - name: Set up Node.js
-        # Always so that it runs the Post Set up Node.js
-        if: always()
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -46,7 +44,6 @@ jobs:
           lre_timeslot_duration_minutes: 30
           lre_post_run_action: Collate and Analyze
           lre_vuds_mode: false
-          lre_trend_report: ASSOCIATED
           # Report status by SLA set to true
           lre_status_by_sla: true
           lre_output_dir: ${{ github.workspace }}
