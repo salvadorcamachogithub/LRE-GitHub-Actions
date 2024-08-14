@@ -50,6 +50,8 @@ jobs:
           lre_output_dir: ${{ github.workspace }}
 
       - name: Upload build artifacts
+        # Always upload LRE Results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: LRE Results
