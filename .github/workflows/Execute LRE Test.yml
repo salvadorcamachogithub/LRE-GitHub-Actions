@@ -5,7 +5,7 @@ on:
     branches:
       - master
 jobs:
-  test:
+  build:
     runs-on: NIMBUSCLIENT
     name: Execute LRE test
     env:
@@ -14,18 +14,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: adopt
           java-version: '11'
-
+          
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
+          
+      - name: List _actions directory contents
+        run: 'ls -R /home/runner/work/_actions'
       - name: Use My LRE GitHub Action
         uses: MicroFocus/lre-gh-action@v1.0.2
         with:
@@ -46,9 +48,10 @@ jobs:
           lre_status_by_sla: false
           lre_output_dir: ${{ github.workspace }}
           lre_enable_stacktrace: true
-
+      - name: List workspace directory contents
+        run: 'ls -R ${{ github.workspace }}/LreResult'
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: ${{ github.workspace }}/LreResult
+          name: LRE Results
+          path: '${{ github.workspace }}/LreResult'
