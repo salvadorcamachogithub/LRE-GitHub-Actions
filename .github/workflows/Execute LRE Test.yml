@@ -27,7 +27,7 @@ jobs:
           node-version: '20'
           
       - name: List _actions directory contents
-        run: 'ls -R ls -R C:\actions-runner\_work\_actions'
+        run: 'ls -R C:\actions-runner\_work\_actions'
       - name: Use My LRE GitHub Action
         uses: MicroFocus/lre-gh-action@v1.0.2
         with:
