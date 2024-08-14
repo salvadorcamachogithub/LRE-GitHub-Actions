@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-
 jobs:
   test:
     runs-on: NIMBUSCLIENT
@@ -20,7 +19,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: adopt
-          java-version: '10'
+          java-version: '11'
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
