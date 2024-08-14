@@ -1,5 +1,6 @@
 name: LRE test
-
+# LoadRunner Enterprise Workflow
+# Start Test on a push to master
 on:
   push:
     branches:

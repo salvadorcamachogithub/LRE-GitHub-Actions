@@ -1,4 +1,5 @@
 name: ValueEdgeIntegrationGitHubActions
+# ValueEdge (Octane) Workflow
 # Events the integration should be triggered on
 on:
   pull_request:
