@@ -1,0 +1,83 @@
+name: LRE Sync - Current Repository
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - master
+    paths:
+      - "Scripts/**"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  workspace-sync:
+    name: Sync current repository scripts with LRE
+    runs-on: ubuntu-latest
+    environment: LRE
+
+    env:
+      lre_username: ${{ secrets.LRE_USERNAME }}
+      lre_password: ${{ secrets.LRE_PASSWORD }}
+      GITHUB_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: adopt
+          java-version: "17"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "25"
+
+      - name: Verify script workspace
+        run: |
+          echo "Workspace directory:"
+          echo "${{ github.workspace }}/Scripts"
+          echo "Files found:"
+          find "${{ github.workspace }}/Scripts" -type f
+
+      - name: Synchronize current repository scripts with LRE
+        uses: MicroFocus/lre-gh-action@v1.0.7
+        with:
+          lre_action: WorkspaceSync
+          lre_description: Synchronize scripts from the current GitHub repository
+
+          lre_server: lreorgdemo.saas.microfocus.com/?tenant=63acd16e-6797-431a-b734-788ab1ef1db9
+          lre_https_protocol: true
+          lre_authenticate_with_token: false
+
+          lre_domain: Salvador
+          lre_project: AOS
+
+          lre_workspace_dir: ${{ github.workspace }}/Scripts
+
+          lre_runtime_only: true
+          lre_workspace_sync_success_threshold: 100
+          lre_workspace_sync_delete_removed_scripts: false
+          lre_enable_stacktrace: true
+
+      - name: Display WorkspaceSync logs
+        if: always()
+        run: |
+          echo "WorkspaceSync logs:"
+          find "${{ github.workspace }}/Scripts/logs" -type f || true
+
+      - name: Upload WorkspaceSync logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: LRE-Current-Repository-Sync-Logs-${{ github.run_number }}
+          path: ${{ github.workspace }}/Scripts/logs
+          if-no-files-found: warn

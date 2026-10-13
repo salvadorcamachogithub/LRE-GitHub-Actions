@@ -1,0 +1,75 @@
+name: LRE Execute Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-lre-test:
+    name: Execute LRE test
+    runs-on: ubuntu-latest
+    environment: LRE
+
+    env:
+      lre_username: ${{ secrets.LRE_USERNAME }}
+      lre_password: ${{ secrets.LRE_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: adopt
+          java-version: "17"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "25"
+
+      - name: Execute LRE test
+        id: execute_lre_test
+        uses: MicroFocus/lre-gh-action@v1.0.7
+        with:
+          lre_action: ExecuteLreTest
+          lre_description: Execute existing LRE performance test
+
+          lre_server: lreorgdemo.saas.microfocus.com/?tenant=63acd16e-6797-431a-b734-788ab1ef1db9
+          lre_https_protocol: true
+          lre_authenticate_with_token: false
+
+          lre_domain: Salvador
+          lre_project: AOS
+          lre_test: 451
+
+          lre_test_instance: AUTO
+
+          lre_timeslot_duration_hours: 0
+          lre_timeslot_duration_minutes: 30
+
+          lre_post_run_action: Collate and Analyze
+          lre_vuds_mode: false
+          lre_status_by_sla: true
+
+          lre_output_dir: ${{ github.workspace }}
+          lre_enable_stacktrace: true
+
+      - name: Display LRE result files
+        if: always()
+        run: |
+          echo "LRE result directory:"
+          echo "${{ github.workspace }}/LreResult"
+          echo "Files found:"
+          find "${{ github.workspace }}/LreResult" -type f || true
+
+      - name: Upload LRE results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: LRE-Test-Results-${{ github.run_number }}
+          path: ${{ github.workspace }}/LreResult
+          if-no-files-found: warn
